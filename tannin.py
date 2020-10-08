@@ -30,16 +30,18 @@
 #Eventually it should verify the input is exactly two 200 characters long.
 #Need to figure out how to ensure escape characters are handled properly.
 
+tannin_version = "0.0.1 Alpha"
+
 import os
 import datetime
 
 def greeting():
-    print("-----------------------------------\rRunning Tannin Version 0.0.1 Alpha\r-----------------------------------\r")
+    print("Running Tannin Version "+tannin_version)
 
 def file_check():
     global log_file
     log_file = open("log.txt", "w")
-    log_file.write("Log file created "+str(datetime.datetime.now())+"\r")
+    log_file.write("Log file created "+str(datetime.datetime.now())+" running version "+tannin_version+"\r")
     if os.path.exists("tannin_keys.txt"):
         log_file.write(str(datetime.datetime.now())+" Key directory detected!\r")
     else:
