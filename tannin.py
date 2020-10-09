@@ -26,69 +26,79 @@
 #SOFTWARE.
 #-------------------------------------------------------------------------------
 
-#Need to divide password input into two equal segments and store them in two separate files.
-#Eventually it should verify the input is exactly two 200 characters long.
 #Need to figure out how to ensure escape characters are handled properly.
+#The file_check function should eventually warn users when only one (non-empty) password library is present and ask what they'd like to do (retry, overwrite, quit)
+#The storage process should also verify that the given keyword has not already been used
 
-tannin_version = "0.0.1 Alpha"
+tannin_version = "0.0.2 Heaven's Gate"
 
 import os
 import datetime
 
 def greeting():
-    print("Running Tannin Version "+tannin_version)
+	print("Running Tannin Version "+tannin_version)
 
 def file_check():
-    global log_file
-    log_file = open("log.txt", "w")
-    log_file.write("Log file created "+str(datetime.datetime.now())+" running version "+tannin_version+"\r")
-    if os.path.exists("tannin_keys.txt"):
-        log_file.write(str(datetime.datetime.now())+" Key directory detected!\r")
-    else:
-        log_file.write(str(datetime.datetime.now())+" Creating new key directory file...\r")
-    if os.path.exists("tannin_passwords1.txt"):
-        log_file.write(str(datetime.datetime.now())+" Password directory 1 detected!\r")
-    if os.path.exists("tannin_passwords2.txt"):
-        log_file.write(str(datetime.datetime.now())+" Password directory 2 detected!\r")
-    else:
-        log_file.write(str(datetime.datetime.now())+" Creating new password directory files...\r")
+	global log_file
+	log_file = open("log.txt", "w")
+	log_file.write("Log file created "+str(datetime.datetime.now())+" running version "+tannin_version+"\r")
+	if os.path.exists("keys.txt"):
+		log_file.write(str(datetime.datetime.now())+" Key directory found.\r")
+	else:
+		log_file.write(str(datetime.datetime.now())+" Key directory not found. New file will be created.\r")
+	if os.path.exists("passwords1.txt") and os.path.exists("passwords2.txt"):
+		log_file.write(str(datetime.datetime.now())+" Password directories found.\r")
+	else:
+		log_file.write(str(datetime.datetime.now())+" Password directories not found. New file will be created.\r")
 
 def select_task():
-    x = 0
-    while x == 0:
-        selected_task = str(input("Enter <s> to store <r> to retrieve <h> to get help: "))
-        if selected_task == "s":
-            log_file.write(str(datetime.datetime.now())+" Beginning storage protocol...\r")
-            x = 1
-            store()
-        elif selected_task == "r":
-            log_file.write(str(datetime.datetime.now())+" Beginning retrieval protocol...\r")
-            print("Retrieval function not yet implemented!")
-            continue
-        elif selected_task == "h":
-            print("Help page not yet created!")
-            continue
-        else:
-            print("\""+selected_task+"\" bad input. Try again.")
-            continue
+	x = 0
+	while x == 0:
+		selected_task = str(input("Enter <s> to store <r> to retrieve <h> to get help: "))
+		if selected_task == "s":
+			log_file.write(str(datetime.datetime.now())+" Beginning storage protocol...\r")
+			x = 1
+			store()
+		elif selected_task == "r":
+			#log_file.write(str(datetime.datetime.now())+" Beginning retrieval protocol...\r")
+			print("Retrieval function not yet implemented!")
+			log_file.write(str(datetime.datetime.now())+" User attempted retrieval. Trying again...\r")
+			continue
+		elif selected_task == "h":
+			print("Help page not yet created!")
+			log_file.write(str(datetime.datetime.now())+" User requested help. Trying again...\r")
+			continue
+		else:
+			print("\""+selected_task+"\" bad input. Try again.")
+			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
+			continue
 
 
 def store():
-    keyword_to_store = str(input("Enter a keyword: "))
-    password_to_store = str(input("Enter a password to be stored: "))
-    log_file.write(str(datetime.datetime.now())+" Storing keyword <"+keyword_to_store+">\r")
-    keyword_file = open("tannin_keys.txt", "a")
-    keyword_file.write(keyword_to_store+"\r")
-    keyword_file.close()
-    log_file.write(str(datetime.datetime.now())+" Storing password <"+password_to_store+">\r")
-    password_file1 = open("tannin_passwords1.txt", "a")
-    password_file1.write(password_to_store[0]+"\r")
-    password_file1.close()
-    password_file2 = open("tannin_passwords2.txt", "a")
-    password_file2.write(password_to_store[1]+"\r")
-    password_file2.close()
-    print("File writing complete!")
-    log_file.write(str(datetime.datetime.now())+" File writing complete!")
+	x = 0
+	while x == 0:
+		keyword_to_store = str(input("Enter a keyword: "))
+		password_to_store = str(input("Enter a password to be stored: "))
+		if len(password_to_store) != 200:
+			print("Entered length is "+str(len(password_to_store))+". Password must equal 200 characters")
+			log_file.write(str(datetime.datetime.now())+" User entered bad password. Requesting new one...\r")
+			continue
+		else:
+			log_file.write(str(datetime.datetime.now())+" Successful keyword and password input. Storing keyword...\r")
+			keyword_file = open("keys.txt", "a")
+			keyword_file.write(keyword_to_store+"\r")
+			keyword_file.close()
+			log_file.write(str(datetime.datetime.now())+" Storing password...\r")
+			password_file1 = open("passwords1.txt", "a")
+			password_file1.write(password_to_store[0:99]+"\r")
+			password_file1.close()
+			password_file2 = open("passwords2.txt", "a")
+			password_file2.write(password_to_store[100:199]+"\r")
+			password_file2.close()
+			print("File writing complete!")
+			log_file.write(str(datetime.datetime.now())+" File writing complete!")
+			x = 1
+			break
 
 greeting()
 file_check()
