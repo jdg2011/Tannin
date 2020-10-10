@@ -30,7 +30,7 @@
 #The file_check function should eventually warn users when only one (non-empty) password library is present and ask what they'd like to do (retry, overwrite, quit)
 #The storage process should also verify that the given keyword has not already been used
 
-tannin_version = "0.0.2 Heaven's Gate"
+tannin_version = "0.0.3 Naturally Lazy"
 
 import os
 import datetime
@@ -60,10 +60,11 @@ def select_task():
 			x = 1
 			store()
 		elif selected_task == "r":
-			#log_file.write(str(datetime.datetime.now())+" Beginning retrieval protocol...\r")
-			print("Retrieval function not yet implemented!")
-			log_file.write(str(datetime.datetime.now())+" User attempted retrieval. Trying again...\r")
-			continue
+			log_file.write(str(datetime.datetime.now())+" Beginning retrieval protocol...\r")
+			x = 1
+			keyword_query()
+			# print("Retrieval function not yet implemented!")
+			# log_file.write(str(datetime.datetime.now())+" User attempted retrieval. Trying again...\r")
 		elif selected_task == "h":
 			print("Help page not yet created!")
 			log_file.write(str(datetime.datetime.now())+" User requested help. Trying again...\r")
@@ -72,7 +73,6 @@ def select_task():
 			print("\""+selected_task+"\" bad input. Try again.")
 			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
 			continue
-
 
 def store():
 	x = 0
@@ -100,7 +100,54 @@ def store():
 			x = 1
 			break
 
+def keyword_query():
+	keyword_file = open("keys.txt", "r")
+	y = 0
+	while y == 0:
+		keyword_to_find = str(input("Enter a keyword: "))
+		if keyword_to_find in keyword_file.read().split():
+			log_file.write(str(datetime.datetime.now())+" Found keyword. Acquiring line number...\r")
+			print("Keyword found!")
+			keyword_file.close()
+			break
+		else:
+			log_file.write(str(datetime.datetime.now())+" Keyword not found. Requesting different keyword...\r")
+			print("Keyword not found! Please retry.")
+			continue
+	line_finder(keyword_to_find)
+
+def line_finder(keyword_to_find):
+	keyword_file = open("keys.txt", "r")
+	for num, line in enumerate(keyword_file,1):
+					if keyword_to_find in line:
+						keyword_file.close()
+						log_file.write(str(datetime.datetime.now())+" Found line number <"+str(num)+">. Beginning retrieval...\r")
+						retrieval(num)
+						break
+
+
+def retrieval(key):
+	password_file1 = open("passwords1.txt", "r")
+	password_file2 = open("passwords2.txt", "r")
+	z = 0
+	for z in range(int(key)):
+		z += 1
+		if z == key:
+			part1 = password_file1.readline().rstrip('\n')
+			part2 = password_file2.readline().rstrip('\n')
+			print(part1+part2)
+			log_file.write(str(datetime.datetime.now())+" Password successfully delivered.\r")
+			password_file1.close()
+			password_file2.close()
+		else:
+			log_file.write(str(datetime.datetime.now())+" Cycling through password files...\r")
+			password_file1.readline()
+			password_file2.readline()
+			continue
+
+
 greeting()
 file_check()
 select_task()
+log_file.write(str(datetime.datetime.now())+" Successfully reached end of program. Closing log.\r")
 log_file.close()
