@@ -54,7 +54,7 @@ def file_check():
 def select_task():
 	x = 0
 	while x == 0:
-		selected_task = str(input("Enter <s> to store <r> to retrieve <h> to get help: "))
+		selected_task = str(input("Enter command: <s> store, or <r> retrieve "))
 		if selected_task == "s":
 			log_file.write(str(datetime.datetime.now())+" Beginning storage protocol...\r")
 			x = 1
@@ -63,8 +63,6 @@ def select_task():
 			log_file.write(str(datetime.datetime.now())+" Beginning retrieval protocol...\r")
 			x = 1
 			keyword_query()
-			# print("Retrieval function not yet implemented!")
-			# log_file.write(str(datetime.datetime.now())+" User attempted retrieval. Trying again...\r")
 		elif selected_task == "h":
 			print("Help page not yet created!")
 			log_file.write(str(datetime.datetime.now())+" User requested help. Trying again...\r")
@@ -107,7 +105,6 @@ def keyword_query():
 		keyword_to_find = str(input("Enter a keyword: "))
 		if keyword_to_find in keyword_file.read().split():
 			log_file.write(str(datetime.datetime.now())+" Found keyword. Acquiring line number...\r")
-			print("Keyword found!")
 			keyword_file.close()
 			break
 		else:
@@ -121,7 +118,7 @@ def line_finder(keyword_to_find):
 	for num, line in enumerate(keyword_file,1):
 					if keyword_to_find in line:
 						keyword_file.close()
-						log_file.write(str(datetime.datetime.now())+" Found line number <"+str(num)+">. Beginning retrieval...\r")
+						log_file.write(str(datetime.datetime.now())+" Found line number < "+str(num)+" >. Beginning retrieval...\r")
 						retrieval(num)
 						break
 
@@ -135,7 +132,7 @@ def retrieval(key):
 		if z == key:
 			part1 = password_file1.readline().rstrip('\n')
 			part2 = password_file2.readline().rstrip('\n')
-			print(part1+part2)
+			print("Password found:\n\n--------------------------\n"+part1+part2+"\n--------------------------")
 			log_file.write(str(datetime.datetime.now())+" Password successfully delivered.\r")
 			password_file1.close()
 			password_file2.close()
