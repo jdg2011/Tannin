@@ -5,6 +5,7 @@ Commands for Tannin:
 | k | see a print out of all saved keywords (not yet implemented)
 | c | copy a password to the clipboard (not yet implemented)
 | p | paste a password from the clipboard (not yet implemented)
+| w | wipe entire database (not yet implemented)
 | h | view this help message
 | q | quit Tannin
 
