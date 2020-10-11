@@ -32,6 +32,7 @@
 
 tannin_version = "0.0.4 Slomo"
 
+import pyperclip
 import os
 import datetime
 
@@ -128,7 +129,6 @@ def line_finder(keyword_to_find):
 						retrieval(num)
 						break
 
-
 def retrieval(key):
 	password_file1 = open("passwords1.txt", "r")
 	password_file2 = open("passwords2.txt", "r")
@@ -146,6 +146,24 @@ def retrieval(key):
 			log_file.write(str(datetime.datetime.now())+" Cycling through password files...\r")
 			password_file1.readline()
 			password_file2.readline()
+			continue
+	q = 0
+	while q == 0:
+		what_now = str(input("Enter c to copy to clipboard, r to restart, or q to quit: "))
+		if what_now == "c":
+			log_file.write(str(datetime.datetime.now())+" Copying found password to clipboard...\r")
+			pyperclip.copy(part1+part2)
+			continue
+		elif what_now == "r":
+			log_file.write(str(datetime.datetime.now())+" Restarting...\r")
+			q = 1
+			select_task()
+		elif what_now == "q":
+			log_file.write(str(datetime.datetime.now())+" Quitting...\r")
+			break
+		else:
+			print("\""+selected_task+"\" bad input. Try again.")
+			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
 			continue
 
 
