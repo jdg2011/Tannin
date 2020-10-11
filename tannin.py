@@ -70,6 +70,9 @@ def select_task():
 			help_file.close()
 			log_file.write(str(datetime.datetime.now())+" Help file printed.\r")
 			continue
+		elif selected_task == "q":
+			log_file.write(str(datetime.datetime.now())+" Quitting...\r")
+			break
 		else:
 			print("\""+selected_task+"\" bad input. Try again.")
 			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
