@@ -30,7 +30,7 @@
 #The file_check function should eventually warn users when only one (non-empty) password library is present and ask what they'd like to do (retry, overwrite, quit)
 #The storage process should also verify that the given keyword has not already been used
 
-tannin_version = "0.0.3 Naturally Lazy"
+tannin_version = "0.0.4 Slomo"
 
 import os
 import datetime
@@ -54,7 +54,7 @@ def file_check():
 def select_task():
 	x = 0
 	while x == 0:
-		selected_task = str(input("Enter command: <s> store, or <r> retrieve "))
+		selected_task = str(input("Enter command: "))
 		if selected_task == "s":
 			log_file.write(str(datetime.datetime.now())+" Beginning storage protocol...\r")
 			x = 1
@@ -64,8 +64,11 @@ def select_task():
 			x = 1
 			keyword_query()
 		elif selected_task == "h":
-			print("Help page not yet created!")
-			log_file.write(str(datetime.datetime.now())+" User requested help. Trying again...\r")
+			log_file.write(str(datetime.datetime.now())+" Opening and printing help file...\r")
+			help_file = open("help.txt", "r")
+			print(help_file.read())
+			help_file.close()
+			log_file.write(str(datetime.datetime.now())+" Help file printed.\r")
 			continue
 		else:
 			print("\""+selected_task+"\" bad input. Try again.")
