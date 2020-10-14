@@ -52,30 +52,35 @@ def file_check():
 	else:
 		log_file.write(str(datetime.datetime.now())+" Password directories not found. New file will be created.\r")
 
-def select_task():
+def get_command():
 	x = 0
 	while x == 0:
-		selected_task = str(input("Enter command: "))
-		if selected_task == "s":
-			log_file.write(str(datetime.datetime.now())+" Beginning storage protocol...\r")
-			x = 1
-			store()
-		elif selected_task == "r":
-			log_file.write(str(datetime.datetime.now())+" Beginning retrieval protocol...\r")
-			x = 1
-			keyword_query()
-		elif selected_task == "h":
-			log_file.write(str(datetime.datetime.now())+" Opening and printing help file...\r")
-			help_file = open("help.txt", "r")
-			print(help_file.read())
-			help_file.close()
-			log_file.write(str(datetime.datetime.now())+" Help file printed.\r")
-			continue
-		elif selected_task == "q":
-			log_file.write(str(datetime.datetime.now())+" Quitting...\r")
-			break
+		command = str(input("Enter command: "))
+		if command == "s" or command == "store":
+			#log_file.write(str(datetime.datetime.now())+" Beginning storage protocol...\r")
+			#x = 1
+			#store()
+			return "store"
+		elif command == "r" or command == "retrieve":
+			#log_file.write(str(datetime.datetime.now())+" Beginning retrieval protocol...\r")
+			#x = 1
+			#keyword_query()
+			return "retrieve"
+		elif command == "h" or command == "help":
+			#log_file.write(str(datetime.datetime.now())+" Opening and printing help file...\r")
+			#help_file = open("help.txt", "r")
+			#print(help_file.read())
+			#help_file.close()
+			#log_file.write(str(datetime.datetime.now())+" Help file printed.\r")
+			return "help"
+		elif command == "q" or command == "quit":
+			#log_file.write(str(datetime.datetime.now())+" Quitting...\r")
+			return "quit"
+		elif command == "w" or command == "wipe":
+			#log_file.write(str(datetime.datetime.now())+" Quitting...\r")
+			return "wipe"
 		else:
-			print("\""+selected_task+"\" bad input. Try again.")
+			print("\""+command+"\" bad input. Try again.")
 			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
 			continue
 
@@ -157,18 +162,43 @@ def retrieval(key):
 		elif what_now == "r":
 			log_file.write(str(datetime.datetime.now())+" Restarting...\r")
 			q = 1
-			select_task()
+			get_command()
 		elif what_now == "q":
 			log_file.write(str(datetime.datetime.now())+" Quitting...\r")
 			break
 		else:
-			print("\""+selected_task+"\" bad input. Try again.")
+			print("\""+what_now+"\" bad input. Try again.")
 			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
-			continue
+		continue
 
+def print_help():
+	log_file.write(str(datetime.datetime.now())+" Opening and printing help file...\r")
+	help_file = open("help.txt", "r")
+	print(help_file.read())
+	help_file.close()
+	log_file.write(str(datetime.datetime.now())+" Help file printed.\r")
+
+def task(selected_task, option1):
+	if selected_task == "store":
+		store()
+	elif selected_task == "retrieve":
+		keyword_query()
+	elif selected_task == "help":
+		print_help()
+	elif selected_task == "wipe":
+		print("Wipe function not yet implemented!")
+	elif selected_task == "list":
+		print("Keyword print out not yet implemented!")
+	elif selected_task == "quit":
+		T = 1
 
 greeting()
 file_check()
-select_task()
+T = 0
+while T == 0:
+	choice = get_command()
+	option1 = 0
+	task(choice, option1)
+	continue
 log_file.write(str(datetime.datetime.now())+" Successfully reached end of program. Closing log.\r")
 log_file.close()
