@@ -30,7 +30,7 @@
 #The file_check function should eventually warn users when only one (non-empty) password library is present and ask what they'd like to do (retry, overwrite, quit)
 #The storage process should also verify that the given keyword has not already been used
 
-tannin_version = "0.0.4 Slomo"
+tannin_version = "0.0.5 Holland, 1945"
 
 import pyperclip
 import os
@@ -57,28 +57,17 @@ def get_command():
 	while x == 0:
 		command = str(input("Enter command: "))
 		if command == "s" or command == "store":
-			#log_file.write(str(datetime.datetime.now())+" Beginning storage protocol...\r")
-			#x = 1
-			#store()
 			return "store"
 		elif command == "r" or command == "retrieve":
-			#log_file.write(str(datetime.datetime.now())+" Beginning retrieval protocol...\r")
-			#x = 1
-			#keyword_query()
 			return "retrieve"
 		elif command == "h" or command == "help":
-			#log_file.write(str(datetime.datetime.now())+" Opening and printing help file...\r")
-			#help_file = open("help.txt", "r")
-			#print(help_file.read())
-			#help_file.close()
-			#log_file.write(str(datetime.datetime.now())+" Help file printed.\r")
 			return "help"
 		elif command == "q" or command == "quit":
-			#log_file.write(str(datetime.datetime.now())+" Quitting...\r")
 			return "quit"
 		elif command == "w" or command == "wipe":
-			#log_file.write(str(datetime.datetime.now())+" Quitting...\r")
 			return "wipe"
+		elif command == "l" or command == "list":
+			return "list"
 		else:
 			print("\""+command+"\" bad input. Try again.")
 			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
@@ -180,16 +169,22 @@ def print_help():
 
 def task(selected_task, option1):
 	if selected_task == "store":
+		log_file.write(str(datetime.datetime.now())+" Beginning storage protocol...\r")
 		store()
 	elif selected_task == "retrieve":
+		log_file.write(str(datetime.datetime.now())+" Beginning retrieval protocol...\r")
 		keyword_query()
 	elif selected_task == "help":
 		print_help()
 	elif selected_task == "wipe":
+		log_file.write(str(datetime.datetime.now())+" User attempted wipe function.\r")
 		print("Wipe function not yet implemented!")
 	elif selected_task == "list":
+		log_file.write(str(datetime.datetime.now())+" User attempted list function\r")
 		print("Keyword print out not yet implemented!")
 	elif selected_task == "quit":
+		log_file.write(str(datetime.datetime.now())+" Quitting...\r")
+		global T
 		T = 1
 
 greeting()
