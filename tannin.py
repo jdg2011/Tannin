@@ -30,7 +30,7 @@
 #The file_check function should eventually warn users when only one (non-empty) password library is present and ask what they'd like to do (retry, overwrite, quit)
 #The storage process should also verify that the given keyword has not already been used
 
-tannin_version = "0.0.5 \"Holland, 1945\""
+tannin_version = "0.1 \"Japanese Thread\""
 
 import pyperclip
 import os
@@ -101,10 +101,10 @@ def store():
 			break
 
 def keyword_query():
-	keyword_file = open("keys.txt", "r")
 	y = 0
 	while y == 0:
 		keyword_to_find = str(input("Enter a keyword: "))
+		keyword_file = open("keys.txt", "r")
 		if keyword_to_find in keyword_file.read().split():
 			log_file.write(str(datetime.datetime.now())+" Found keyword. Acquiring line number...\r")
 			keyword_file.close()
@@ -112,7 +112,8 @@ def keyword_query():
 		else:
 			log_file.write(str(datetime.datetime.now())+" Keyword <"+keyword_to_find+"> not found. Requesting different keyword...\r")
 			print("Keyword not found! Please retry.")
-		continue
+			keyword_file.close()
+			continue
 	line_finder(keyword_to_find)
 
 def line_finder(keyword_to_find):
