@@ -4,7 +4,7 @@ Commands for Tannin:
 | s | store a password with a keyword
 | r | retrieve a password by entering a keyword
 | l | list all saved keywords
-| c | copy a password to the clipboard (doesn't work correctly)
+| c | copy a password to the clipboard
 | p | paste a password from the clipboard (not yet implemented)
 | w | wipe entire database (not yet implemented)
 | h | view this help message
