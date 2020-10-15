@@ -29,7 +29,6 @@
 #Need to figure out how to ensure escape characters are handled properly.
 #The file_check function should eventually warn users when only one (non-empty) password library is present and ask what they'd like to do (retry, overwrite, quit)
 #The storage process should also verify that the given keyword has not already been used
-#Need to fix glitch where restarting after retrieval causes the first given command to be ignored
 
 tannin_version = "0.0.5 \"Holland, 1945\""
 
@@ -166,6 +165,13 @@ def print_help():
 	help_file.close()
 	log_file.write(str(datetime.datetime.now())+" Help file printed.\r")
 
+def list_keys():
+	log_file.write(str(datetime.datetime.now())+" Opening and printing keyword file...\r")
+	keyword_file = open("keys.txt", "r")
+	print("\n"+keyword_file.read())
+	keyword_file.close()
+	log_file.write(str(datetime.datetime.now())+" Keyword file printed.\r")
+
 def task(selected_task, option1):
 	if selected_task == "store":
 		log_file.write(str(datetime.datetime.now())+" Beginning storage protocol...\r")
@@ -180,7 +186,8 @@ def task(selected_task, option1):
 		print("Wipe function not yet implemented!")
 	elif selected_task == "list":
 		log_file.write(str(datetime.datetime.now())+" User attempted list function\r")
-		print("Keyword print out not yet implemented!")
+		list_keys()
+		#print("Keyword print out not yet implemented!")
 	elif selected_task == "quit":
 		log_file.write(str(datetime.datetime.now())+" Quitting...\r")
 		global T
