@@ -110,7 +110,7 @@ def keyword_query():
 			keyword_file.close()
 			break
 		else:
-			log_file.write(str(datetime.datetime.now())+" Keyword not found. Requesting different keyword...\r")
+			log_file.write(str(datetime.datetime.now())+" Keyword <"+keyword_to_find+"> not found. Requesting different keyword...\r")
 			print("Keyword not found! Please retry.")
 		continue
 	line_finder(keyword_to_find)
