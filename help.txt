@@ -1,8 +1,9 @@
+
 --------------------
 Commands for Tannin:
 | s | store a password with a keyword
 | r | retrieve a password by entering a keyword
-| k | see a print out of all saved keywords (not yet implemented)
+| l | list all saved keywords
 | c | copy a password to the clipboard (doesn't work correctly)
 | p | paste a password from the clipboard (not yet implemented)
 | w | wipe entire database (not yet implemented)
