@@ -153,7 +153,7 @@ def retrieval(key):
 		elif what_now == "r":
 			log_file.write(str(datetime.datetime.now())+" Restarting...\r")
 			q = 1
-			get_command()
+			break
 		else:
 			print("\""+what_now+"\" bad input. Try again.")
 			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
