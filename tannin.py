@@ -30,7 +30,7 @@
 #The file_check function should eventually warn users when only one (non-empty) password library is present and ask what they'd like to do (retry, overwrite, quit)
 #The storage process should also verify that the given keyword has not already been used
 
-tannin_version = "0.1 \"Japanese Thread\""
+tannin_version = "0.1.1 \"Dreamer\""
 
 import pyperclip
 import os
@@ -167,11 +167,37 @@ def print_help():
 	log_file.write(str(datetime.datetime.now())+" Help file printed.\r")
 
 def list_keys():
-	log_file.write(str(datetime.datetime.now())+" Opening and printing keyword file...\r")
-	keyword_file = open("keys.txt", "r")
-	print("\n"+keyword_file.read())
-	keyword_file.close()
-	log_file.write(str(datetime.datetime.now())+" Keyword file printed.\r")
+	if os.path.exists("keys.txt"):
+		log_file.write(str(datetime.datetime.now())+" Opening and printing keyword file...\r")
+		keyword_file = open("keys.txt", "r")
+		print("\n"+keyword_file.read())
+		keyword_file.close()
+		log_file.write(str(datetime.datetime.now())+" Keyword file printed.\r")
+	else:
+		log_file.write(str(datetime.datetime.now())+" User attempted listing keywords but no keyword file found.\r")
+		print("No keyword file found.\n")
+
+def wipe_files():
+	if os.path.exists("keys.txt"):
+		log_file.write(str(datetime.datetime.now())+" Deleting keyword file...\r")
+		os.remove("keys.txt")
+	else:
+		log_file.write(str(datetime.datetime.now())+" Keyword file not found.\r")
+		print("Keyword file does not exist.")
+	if os.path.exists("passwords1.txt"):
+		log_file.write(str(datetime.datetime.now())+" Deleting first password file...\r")
+		os.remove("passwords1.txt")
+	else:
+		log_file.write(str(datetime.datetime.now())+" First password file not found.\r")
+		print("First password file does not exist.")
+	if os.path.exists("passwords2.txt"):
+		log_file.write(str(datetime.datetime.now())+" Deleting second password file...\r")
+		os.remove("passwords2.txt")
+	else:
+		log_file.write(str(datetime.datetime.now())+" Second password file not found.\r")
+		print("Second password file does not exist.")
+	print("File wiping complete.\n")
+	log_file.write(str(datetime.datetime.now())+" File wiping complete.\r")
 
 def task(selected_task, option1):
 	if selected_task == "store":
@@ -183,12 +209,13 @@ def task(selected_task, option1):
 	elif selected_task == "help":
 		print_help()
 	elif selected_task == "wipe":
-		log_file.write(str(datetime.datetime.now())+" User attempted wipe function.\r")
-		print("Wipe function not yet implemented!")
+		#log_file.write(str(datetime.datetime.now())+" User attempted wipe function.\r")
+		#print("Wipe function not yet implemented!")
+		log_file.write(str(datetime.datetime.now())+" Beginning wipe protocol...\r")
+		wipe_files()
 	elif selected_task == "list":
 		log_file.write(str(datetime.datetime.now())+" User attempted list function\r")
 		list_keys()
-		#print("Keyword print out not yet implemented!")
 	elif selected_task == "quit":
 		log_file.write(str(datetime.datetime.now())+" Quitting...\r")
 		global T
