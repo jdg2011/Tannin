@@ -164,11 +164,15 @@ def retrieval(key):
 		continue
 
 def print_help():
-	log_file.write(str(datetime.datetime.now())+" Opening and printing help file...\r")
-	help_file = open("help.txt", "r")
-	print(help_file.read())
-	help_file.close()
-	log_file.write(str(datetime.datetime.now())+" Help file printed.\r")
+	if os.path.exists("help.txt"):
+		log_file.write(str(datetime.datetime.now())+" Opening and printing help file...\r")
+		help_file = open("help.txt", "r")
+		print(help_file.read())
+		help_file.close()
+		log_file.write(str(datetime.datetime.now())+" Help file printed.\r")
+	else:
+		log_file.write(str(datetime.datetime.now())+" User attempted help but no help file found.\r")
+		print("No help file found.")
 
 def list_keys():
 	if os.path.exists("keys.txt"):
