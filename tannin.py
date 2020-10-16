@@ -95,7 +95,7 @@ def store():
 			password_file2 = open("passwords2.txt", "a")
 			password_file2.write(password_to_store[100:200]+"\r")
 			password_file2.close()
-			print("File writing complete!")
+			print("File writing complete!\r")
 			log_file.write(str(datetime.datetime.now())+" File writing complete!")
 			x = 1
 			break
@@ -174,7 +174,7 @@ def list_keys():
 	if os.path.exists("keys.txt"):
 		log_file.write(str(datetime.datetime.now())+" Opening and printing keyword file...\r")
 		keyword_file = open("keys.txt", "r")
-		print("\n"+keyword_file.read())
+		print("\nStored keywords:\n\n"+keyword_file.read())
 		keyword_file.close()
 		log_file.write(str(datetime.datetime.now())+" Keyword file printed.\r")
 	else:
