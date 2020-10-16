@@ -31,7 +31,7 @@
 #The storage process should also verify that the given keyword has not already been used
 #Need to get rid of the "what_now" operation in retrieval function and instead make copy command always available (just copy whatever password was last found) and it should also be a retrieval option.
 
-tannin_version = "0.1.1 \"Dreamer\""
+tannin_version = "0.2.0 \"Cruiser\""
 
 import pyperclip
 import os
