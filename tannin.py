@@ -29,6 +29,7 @@
 #Need to figure out how to ensure escape characters are handled properly.
 #The file_check function should eventually warn users when only one (non-empty) password library is present and ask what they'd like to do (retry, overwrite, quit)
 #The storage process should also verify that the given keyword has not already been used
+#Need to get rid of the "what_now" operation in retrieval function and instead make copy command always available (just copy whatever password was last found) and it should also be a retrieval option.
 
 tannin_version = "0.1.1 \"Dreamer\""
 
@@ -56,8 +57,12 @@ def file_check():
 def get_command():
 	x = 0
 	while x == 0:
+		global option1
 		command = str(input("Enter command: "))
 		if command == "s" or command == "store":
+			return "store"
+		elif command == "s -p" or command == "store -p":
+			option1 = "p"
 			return "store"
 		elif command == "r" or command == "retrieve":
 			return "retrieve"
@@ -74,11 +79,16 @@ def get_command():
 			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
 			continue
 
-def store():
+def store(option1):
 	x = 0
 	while x == 0:
 		keyword_to_store = str(input("Enter a keyword: "))
-		password_to_store = str(input("Enter a password to be stored: "))
+		if option1 == "p":
+			log_file.write(str(datetime.datetime.now())+" Attempting to pull password from clipboard...\r")
+			print("Getting password from clipboard...")
+			password_to_store = pyperclip.paste()
+		else:
+			password_to_store = str(input("Enter a password to be stored: "))
 		if len(password_to_store) != 200:
 			print("Entered length is "+str(len(password_to_store))+". Password must equal 200 characters")
 			log_file.write(str(datetime.datetime.now())+" User entered bad password. Requesting new one...\r")
@@ -153,6 +163,7 @@ def retrieval(key):
 		if what_now == "c":
 			log_file.write(str(datetime.datetime.now())+" Copying found password to clipboard...\r")
 			pyperclip.copy(part1+part2)
+			print("Password copied to clipboard.")
 			continue
 		elif what_now == "r":
 			log_file.write(str(datetime.datetime.now())+" Restarting...\r")
@@ -210,7 +221,7 @@ def wipe_files():
 def task(selected_task, option1):
 	if selected_task == "store":
 		log_file.write(str(datetime.datetime.now())+" Beginning storage protocol...\r")
-		store()
+		store(option1)
 	elif selected_task == "retrieve":
 		log_file.write(str(datetime.datetime.now())+" Beginning retrieval protocol...\r")
 		keyword_query()
@@ -231,8 +242,8 @@ greeting()
 file_check()
 T = 0
 while T == 0:
-	choice = get_command()
 	option1 = 0
+	choice = get_command()
 	task(choice, option1)
 	continue
 log_file.write(str(datetime.datetime.now())+" Successfully reached end of program. Closing log.\r")
