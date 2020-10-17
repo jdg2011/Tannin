@@ -118,20 +118,16 @@ def store():
 
 def keyword_query():
 	if file_status == "ok":
-		y = 0
-		while y == 0:
-			keyword_to_find = str(input("Enter a keyword: "))
-			keyword_file = open("keys.txt", "r")
-			if keyword_to_find in keyword_file.read().split():
-				log_file.write(str(datetime.datetime.now())+" Found keyword. Acquiring line number...\r")
-				keyword_file.close()
-				break
-			else:
-				log_file.write(str(datetime.datetime.now())+" Keyword <"+keyword_to_find+"> not found. Requesting different keyword...\r")
-				print("Keyword not found! Please retry.")
-				keyword_file.close()
-				continue
-		line_finder(keyword_to_find)
+		keyword_to_find = str(input("Enter a keyword: "))
+		keyword_file = open("keys.txt", "r")
+		if keyword_to_find in keyword_file.read().split():
+			log_file.write(str(datetime.datetime.now())+" Found keyword. Acquiring line number...\r")
+			keyword_file.close()
+			line_finder(keyword_to_find)
+		else:
+			log_file.write(str(datetime.datetime.now())+" User attempted bad keyword query.\r")
+			print("Keyword \""+keyword_to_find+"\" not found.\r")
+			keyword_file.close()
 	else:
 		log_file.write(str(datetime.datetime.now())+" One or more files are missing; password retrieval not possible.\r")
 		print("Files <keys.txt> <password1.txt> and <password2.txt> must be present and non-empty to initiate retrieval.\nEnsure all files are in Tannin directory or store a new password with command <s>.\n")
