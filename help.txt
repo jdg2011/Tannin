@@ -1,16 +1,16 @@
 
 --------------------
 Commands for Tannin:
-| [s]tore    | store a password with a keyword 
-|		<use option "-p" to automatically paste a password
+| [s]tore    | store a hash with a keyword 
+|		<use option "-p" to automatically paste a hash
 |		from the clipboard after entering the keyword>
-| [r]etrieve | retrieve a password by entering a keyword
-|		<use option "-c" to automatically paste the password to
+| [r]etrieve | retrieve a hash by entering a keyword
+|		<use option "-c" to automatically paste the hash to
 |		the clipboard after entering the keyword>
-|		<use option "-d" to delete the password and its keyword
+|		<use option "-d" to delete the hash and its keyword
 |		(not yet implemented)>
 | [l]ist     | list all saved keywords
-| [c]opy     | copy a the last found password to the clipboard
+| [c]opy     | copy a the last found hash to the clipboard
 | [w]ipe     | wipe entire database
 | [h]elp     | help message print out
 | [q]uit     | quit Tannin
@@ -18,6 +18,6 @@ Commands for Tannin:
 Keywords must be unique from each other, and they must not contain
 spaces, back-slashes, or pound symbols.
 
-Tannin is designed to be used in tandem with Tea.lock, so passwords are
+Tannin is designed to be used in tandem with Tea.lock, so hashes are
 only accepted if they are exactly 200 characters long.
 --------------------
