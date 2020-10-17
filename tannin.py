@@ -31,7 +31,7 @@
 #The storage process should also verify that the given keyword has not already been used
 #Need to get rid of the "what_now" operation in retrieval function and instead make copy command always available (just copy whatever password was last found) and it should also be a retrieval option.
 
-tannin_version = "0.2.0 \"Cruiser\""
+tannin_version = "0.2.1 \"Stay\""
 
 import pyperclip
 import os
@@ -66,6 +66,9 @@ def get_command():
 			return "store"
 		elif command == "r" or command == "retrieve":
 			return "retrieve"
+		elif command == "r -c" or command == "retrieve -c":
+			option1 = "c"
+			return "retrieve"
 		elif command == "h" or command == "help":
 			return "help"
 		elif command == "q" or command == "quit":
@@ -74,6 +77,8 @@ def get_command():
 			return "wipe"
 		elif command == "l" or command == "list":
 			return "list"
+		elif command == "c" or command == "copy":
+			return "copy"
 		else:
 			print("\""+command+"\" bad input. Try again.")
 			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
@@ -146,9 +151,9 @@ def retrieval(key):
 	for z in range(int(key)):
 		z += 1
 		if z == key:
-			part1 = password_file1.readline().rstrip('\n')
-			part2 = password_file2.readline().rstrip('\n')
-			print("Password found:\n\n--------------------------\n"+part1+part2+"\n--------------------------")
+			global found_password
+			found_password = password_file1.readline().rstrip('\n')+password_file2.readline().rstrip('\n')
+			print("Password found:\n\n--------------------------\n"+found_password+"\n--------------------------")
 			log_file.write(str(datetime.datetime.now())+" Password successfully delivered.\r")
 			password_file1.close()
 			password_file2.close()
@@ -157,22 +162,17 @@ def retrieval(key):
 			password_file1.readline()
 			password_file2.readline()
 			continue
-	q = 0
-	while q == 0:
-		what_now = str(input("Enter c to copy to clipboard or r to restart: "))
-		if what_now == "c":
-			log_file.write(str(datetime.datetime.now())+" Copying found password to clipboard...\r")
-			pyperclip.copy(part1+part2)
-			print("Password copied to clipboard.")
-			continue
-		elif what_now == "r":
-			log_file.write(str(datetime.datetime.now())+" Restarting...\r")
-			q = 1
-			break
-		else:
-			print("\""+what_now+"\" bad input. Try again.")
-			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
-		continue
+	if option1 == "c":
+		copy_password()
+
+def copy_password():
+	if found_password != 0:
+		log_file.write(str(datetime.datetime.now())+" Copying found password to clipboard...\r")
+		pyperclip.copy(found_password)
+		print("Password copied to clipboard.")
+	else:
+		log_file.write(str(datetime.datetime.now())+" User attempted copying password when no password found.\r")
+		print("Find a password first with command <r>")
 
 def print_help():
 	if os.path.exists("help.txt"):
@@ -231,8 +231,11 @@ def task(selected_task, option1):
 		log_file.write(str(datetime.datetime.now())+" Beginning wipe protocol...\r")
 		wipe_files()
 	elif selected_task == "list":
-		log_file.write(str(datetime.datetime.now())+" User attempted list function\r")
+		log_file.write(str(datetime.datetime.now())+" Beginning list protocol...\r")
 		list_keys()
+	elif selected_task == "copy":
+		log_file.write(str(datetime.datetime.now())+" Beginning copy protocol...\r")
+		copy_password()
 	elif selected_task == "quit":
 		log_file.write(str(datetime.datetime.now())+" Quitting...\r")
 		global T
@@ -240,6 +243,7 @@ def task(selected_task, option1):
 
 greeting()
 file_check()
+found_password = 0
 T = 0
 while T == 0:
 	option1 = 0
