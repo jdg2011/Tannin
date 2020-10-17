@@ -45,14 +45,18 @@ def file_check():
 	global log_file
 	log_file = open("log.txt", "w")
 	log_file.write("Log file created "+str(datetime.datetime.now())+" running version "+tannin_version+"\r")
+	global file_status
+	file_status = "ok"
 	if os.path.exists("keys.txt"):
 		log_file.write(str(datetime.datetime.now())+" Key directory found.\r")
 	else:
 		log_file.write(str(datetime.datetime.now())+" Key directory not found. New file will be created.\r")
+		file_status = "bad"
 	if os.path.exists("passwords1.txt") and os.path.exists("passwords2.txt"):
 		log_file.write(str(datetime.datetime.now())+" Password directories found.\r")
 	else:
 		log_file.write(str(datetime.datetime.now())+" Password directories not found. New file will be created.\r")
+		file_status = "bad"
 
 def get_command():
 	x = 0
@@ -107,11 +111,13 @@ def store():
 		password_file2 = open("passwords2.txt", "a")
 		password_file2.write(password_to_store[100:200]+"\r")
 		password_file2.close()
+		global file_status
+		file_status = "ok"
 		log_file.write(str(datetime.datetime.now())+" File writing complete!\r")
 		print("File writing complete!\r")
 
 def keyword_query():
-	if os.path.exists("keys.txt") and os.path.exists("passwords1.txt") and os.path.exists("passwords2.txt"):
+	if file_status == "ok":
 		y = 0
 		while y == 0:
 			keyword_to_find = str(input("Enter a keyword: "))
@@ -127,7 +133,7 @@ def keyword_query():
 				continue
 		line_finder(keyword_to_find)
 	else:
-		log_file.write(str(datetime.datetime.now())+" One or both password files are missing; password retrieval not possible.\r")
+		log_file.write(str(datetime.datetime.now())+" One or more files are missing; password retrieval not possible.\r")
 		print("Files <keys.txt> <password1.txt> and <password2.txt> must be present and non-empty to initiate retrieval.\nEnsure all files are in Tannin directory or store a new password with command <s>.\n")
 
 def line_finder(keyword_to_find):
