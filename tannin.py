@@ -27,11 +27,9 @@
 #-------------------------------------------------------------------------------
 
 #Need to figure out how to ensure escape characters are handled properly.
-#The file_check function should eventually warn users when only one (non-empty) hash library is present and ask what they'd like to do (retry, overwrite, quit)
-#The storage process should also verify that the given keyword has not already been used
-#File check should happen at the start of every command prompt
+#The storage process should also verify that the given keyword has not already been used.
 
-tannin_version = "0.2.1 \"Stay\""
+tannin_version = "0.2.2 \"Two Invitations\""
 
 import pyperclip
 import os
@@ -39,30 +37,31 @@ import datetime
 
 def greeting():
 	print("Welcome to Tannin")
-	print("version "+tannin_version+"\n\n")
+	print("version "+tannin_version+"\n")
 
 def file_check():
-	global log_file
-	log_file = open("log.txt", "w")
-	log_file.write("Log file created "+str(datetime.datetime.now())+" running version "+tannin_version+"\r")
 	global file_status
-	file_status = "ok"
-	if os.path.exists("water.txt"):
-		log_file.write(str(datetime.datetime.now())+" Key directory found.\r")
-	else:
-		log_file.write(str(datetime.datetime.now())+" Key directory not found. New file will be created.\r")
+	log_file.write(str(datetime.datetime.now())+" Checking files...\r")
+	water_check = bool(os.path.exists("water.txt"))
+	earl_check = bool(os.path.exists("earl.txt"))
+	grey_check = bool(os.path.exists("grey.txt"))
+	if water_check and earl_check and grey_check:
+		log_file.write(str(datetime.datetime.now())+" All files found.\r")
+		file_status = "ok"
+	elif not water_check and not earl_check and not grey_check:
+		log_file.write(str(datetime.datetime.now())+" No files found. New directories will be created.\r")
 		file_status = "bad"
-	if os.path.exists("earl.txt") and os.path.exists("grey.txt"):
-		log_file.write(str(datetime.datetime.now())+" hash directories found.\r")
 	else:
-		log_file.write(str(datetime.datetime.now())+" hash directories not found. New file will be created.\r")
+		log_file.write(str(datetime.datetime.now())+" Some but not all files found. Unstable status.\r")
+		print("WARNING: A partial directory was found. Quit and ensure all files are restored before proceeding, or enter command <w> to wipe all present files.\n\n")
 		file_status = "bad"
+
 
 def get_command():
 	x = 0
 	while x == 0:
 		global option1
-		command = str(input("Enter command: "))
+		command = str(input("\nEnter command: "))
 		if command == "s" or command == "store":
 			return "store"
 		elif command == "s -p" or command == "store -p":
@@ -111,10 +110,8 @@ def store():
 		f_grey = open("grey.txt", "a")
 		f_grey.write(hash_to_store[100:200]+"\r")
 		f_grey.close()
-		global file_status
-		file_status = "ok"
 		log_file.write(str(datetime.datetime.now())+" File writing complete!\r")
-		print("File writing complete!\r")
+		print("File writing complete!")
 
 def keyword_query():
 	if file_status == "ok":
@@ -126,7 +123,7 @@ def keyword_query():
 			line_finder(keyword_to_find)
 		else:
 			log_file.write(str(datetime.datetime.now())+" User attempted bad keyword query.\r")
-			print("Keyword \""+keyword_to_find+"\" not found.\r")
+			print("Keyword \""+keyword_to_find+"\" not found.")
 			f_water.close()
 	else:
 		log_file.write(str(datetime.datetime.now())+" One or more files are missing; hash retrieval not possible.\r")
@@ -212,7 +209,7 @@ def wipe_files():
 	else:
 		log_file.write(str(datetime.datetime.now())+" Second hash file not found.\r")
 		print("Second hash file does not exist.")
-	print("File wiping complete.\n")
+	print("File wiping complete.")
 	log_file.write(str(datetime.datetime.now())+" File wiping complete.\r")
 
 def task(selected_task):
@@ -239,10 +236,12 @@ def task(selected_task):
 		T = 1
 
 greeting()
-file_check()
+log_file = open("log.txt", "w")
+log_file.write("Log file created "+str(datetime.datetime.now())+" running version "+tannin_version+"\r")
 found_hash = 0
 T = 0
 while T == 0:
+	file_check()
 	option1 = 0
 	choice = get_command()
 	task(choice)
