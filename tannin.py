@@ -47,12 +47,12 @@ def file_check():
 	log_file.write("Log file created "+str(datetime.datetime.now())+" running version "+tannin_version+"\r")
 	global file_status
 	file_status = "ok"
-	if os.path.exists("keys.txt"):
+	if os.path.exists("water.txt"):
 		log_file.write(str(datetime.datetime.now())+" Key directory found.\r")
 	else:
 		log_file.write(str(datetime.datetime.now())+" Key directory not found. New file will be created.\r")
 		file_status = "bad"
-	if os.path.exists("hashes1.txt") and os.path.exists("hashes2.txt"):
+	if os.path.exists("earl.txt") and os.path.exists("grey.txt"):
 		log_file.write(str(datetime.datetime.now())+" hash directories found.\r")
 	else:
 		log_file.write(str(datetime.datetime.now())+" hash directories not found. New file will be created.\r")
@@ -101,16 +101,16 @@ def store():
 		log_file.write(str(datetime.datetime.now())+" User entered hash not length 200.\r")
 	else:
 		log_file.write(str(datetime.datetime.now())+" Successful keyword and hash input. Storing keyword...\r")
-		keyword_file = open("keys.txt", "a")
-		keyword_file.write(keyword_to_store+"\r")
-		keyword_file.close()
+		f_water = open("water.txt", "a")
+		f_water.write(keyword_to_store+"\r")
+		f_water.close()
 		log_file.write(str(datetime.datetime.now())+" Storing hash...\r")
-		hash_file1 = open("hashes1.txt", "a")
-		hash_file1.write(hash_to_store[0:100]+"\r")
-		hash_file1.close()
-		hash_file2 = open("hashes2.txt", "a")
-		hash_file2.write(hash_to_store[100:200]+"\r")
-		hash_file2.close()
+		f_earl = open("earl.txt", "a")
+		f_earl.write(hash_to_store[0:100]+"\r")
+		f_earl.close()
+		f_grey = open("grey.txt", "a")
+		f_grey.write(hash_to_store[100:200]+"\r")
+		f_grey.close()
 		global file_status
 		file_status = "ok"
 		log_file.write(str(datetime.datetime.now())+" File writing complete!\r")
@@ -119,45 +119,45 @@ def store():
 def keyword_query():
 	if file_status == "ok":
 		keyword_to_find = str(input("Enter a keyword: "))
-		keyword_file = open("keys.txt", "r")
-		if keyword_to_find in keyword_file.read().split():
+		f_water = open("water.txt", "r")
+		if keyword_to_find in f_water.read().split():
 			log_file.write(str(datetime.datetime.now())+" Found keyword. Acquiring line number...\r")
-			keyword_file.close()
+			f_water.close()
 			line_finder(keyword_to_find)
 		else:
 			log_file.write(str(datetime.datetime.now())+" User attempted bad keyword query.\r")
 			print("Keyword \""+keyword_to_find+"\" not found.\r")
-			keyword_file.close()
+			f_water.close()
 	else:
 		log_file.write(str(datetime.datetime.now())+" One or more files are missing; hash retrieval not possible.\r")
-		print("Files <keys.txt> <hash1.txt> and <hash2.txt> must be present and non-empty to initiate retrieval.\nEnsure all files are in Tannin directory or store a new hash with command <s>.\n")
+		print("Files <water.txt> <earl.txt> and <grey.txt> must be present and non-empty to initiate retrieval.\nEnsure all files are in Tannin directory or store a new hash with command <s>.\n")
 
 def line_finder(keyword_to_find):
-	keyword_file = open("keys.txt", "r")
-	for num, line in enumerate(keyword_file,1):
+	f_water = open("water.txt", "r")
+	for num, line in enumerate(f_water,1):
 					if keyword_to_find in line:
-						keyword_file.close()
+						f_water.close()
 						log_file.write(str(datetime.datetime.now())+" Found line number < "+str(num)+" >. Beginning retrieval...\r")
 						retrieval(num)
 						break
 
 def retrieval(key):
-	hash_file1 = open("hashes1.txt", "r")
-	hash_file2 = open("hashes2.txt", "r")
+	f_earl = open("earl.txt", "r")
+	f_grey = open("grey.txt", "r")
 	z = 0
 	for z in range(int(key)):
 		z += 1
 		if z == key:
 			global found_hash
-			found_hash = hash_file1.readline().rstrip('\n')+hash_file2.readline().rstrip('\n')
+			found_hash = f_earl.readline().rstrip('\n')+f_grey.readline().rstrip('\n')
 			print("Hash found:\n\n--------------------------\n"+found_hash+"\n--------------------------")
 			log_file.write(str(datetime.datetime.now())+" Hash successfully delivered.\r")
-			hash_file1.close()
-			hash_file2.close()
+			f_earl.close()
+			f_grey.close()
 		else:
 			log_file.write(str(datetime.datetime.now())+" Cycling through hash files...\r")
-			hash_file1.readline()
-			hash_file2.readline()
+			f_earl.readline()
+			f_grey.readline()
 			continue
 	if option1 == "c":
 		copy_hash()
@@ -183,32 +183,32 @@ def print_help():
 		print("No help file found.")
 
 def list_keys():
-	if os.path.exists("keys.txt"):
+	if os.path.exists("water.txt"):
 		log_file.write(str(datetime.datetime.now())+" Opening and printing keyword file...\r")
-		keyword_file = open("keys.txt", "r")
-		print("\nStored keywords:\n\n"+keyword_file.read())
-		keyword_file.close()
+		f_water = open("water.txt", "r")
+		print("\nStored keywords:\n\n"+f_water.read())
+		f_water.close()
 		log_file.write(str(datetime.datetime.now())+" Keyword file printed.\r")
 	else:
 		log_file.write(str(datetime.datetime.now())+" User attempted listing keywords but no keyword file found.\r")
 		print("No keyword file found.\n")
 
 def wipe_files():
-	if os.path.exists("keys.txt"):
+	if os.path.exists("water.txt"):
 		log_file.write(str(datetime.datetime.now())+" Deleting keyword file...\r")
-		os.remove("keys.txt")
+		os.remove("water.txt")
 	else:
 		log_file.write(str(datetime.datetime.now())+" Keyword file not found.\r")
 		print("Keyword file does not exist.")
-	if os.path.exists("hashes1.txt"):
+	if os.path.exists("earl.txt"):
 		log_file.write(str(datetime.datetime.now())+" Deleting first hash file...\r")
-		os.remove("hashes1.txt")
+		os.remove("earl.txt")
 	else:
 		log_file.write(str(datetime.datetime.now())+" First hash file not found.\r")
 		print("First hash file does not exist.")
-	if os.path.exists("hashes2.txt"):
+	if os.path.exists("grey.txt"):
 		log_file.write(str(datetime.datetime.now())+" Deleting second hash file...\r")
-		os.remove("hashes2.txt")
+		os.remove("grey.txt")
 	else:
 		log_file.write(str(datetime.datetime.now())+" Second hash file not found.\r")
 		print("Second hash file does not exist.")
