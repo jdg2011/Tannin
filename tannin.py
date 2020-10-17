@@ -84,36 +84,31 @@ def get_command():
 			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
 			continue
 
-def store(option1):
-	x = 0
-	while x == 0:
-		keyword_to_store = str(input("Enter a keyword: "))
-		if option1 == "p":
-			log_file.write(str(datetime.datetime.now())+" Attempting to pull password from clipboard...\r")
-			print("Getting password from clipboard...")
-			password_to_store = pyperclip.paste()
-		else:
-			password_to_store = str(input("Enter a password to be stored: "))
-		if len(password_to_store) != 200:
-			print("Entered length is "+str(len(password_to_store))+". Password must equal 200 characters")
-			log_file.write(str(datetime.datetime.now())+" User entered bad password. Requesting new one...\r")
-			continue
-		else:
-			log_file.write(str(datetime.datetime.now())+" Successful keyword and password input. Storing keyword...\r")
-			keyword_file = open("keys.txt", "a")
-			keyword_file.write(keyword_to_store+"\r")
-			keyword_file.close()
-			log_file.write(str(datetime.datetime.now())+" Storing password...\r")
-			password_file1 = open("passwords1.txt", "a")
-			password_file1.write(password_to_store[0:100]+"\r")
-			password_file1.close()
-			password_file2 = open("passwords2.txt", "a")
-			password_file2.write(password_to_store[100:200]+"\r")
-			password_file2.close()
-			print("File writing complete!\r")
-			log_file.write(str(datetime.datetime.now())+" File writing complete!")
-			x = 1
-			break
+def store():
+	keyword_to_store = str(input("Enter a keyword: "))
+	if option1 == "p":
+		log_file.write(str(datetime.datetime.now())+" Attempting to pull password from clipboard...\r")
+		print("Getting password from clipboard...")
+		password_to_store = pyperclip.paste()
+	else:
+		password_to_store = str(input("Enter a password to be stored: "))
+	if len(password_to_store) != 200:
+		print("Entered length is "+str(len(password_to_store))+". Password must equal 200 characters.\r")
+		log_file.write(str(datetime.datetime.now())+" User entered password not length 200.\r")
+	else:
+		log_file.write(str(datetime.datetime.now())+" Successful keyword and password input. Storing keyword...\r")
+		keyword_file = open("keys.txt", "a")
+		keyword_file.write(keyword_to_store+"\r")
+		keyword_file.close()
+		log_file.write(str(datetime.datetime.now())+" Storing password...\r")
+		password_file1 = open("passwords1.txt", "a")
+		password_file1.write(password_to_store[0:100]+"\r")
+		password_file1.close()
+		password_file2 = open("passwords2.txt", "a")
+		password_file2.write(password_to_store[100:200]+"\r")
+		password_file2.close()
+		log_file.write(str(datetime.datetime.now())+" File writing complete!\r")
+		print("File writing complete!\r")
 
 def keyword_query():
 	if os.path.exists("keys.txt") and os.path.exists("passwords1.txt") and os.path.exists("passwords2.txt"):
@@ -218,10 +213,10 @@ def wipe_files():
 	print("File wiping complete.\n")
 	log_file.write(str(datetime.datetime.now())+" File wiping complete.\r")
 
-def task(selected_task, option1):
+def task(selected_task):
 	if selected_task == "store":
 		log_file.write(str(datetime.datetime.now())+" Beginning storage protocol...\r")
-		store(option1)
+		store()
 	elif selected_task == "retrieve":
 		log_file.write(str(datetime.datetime.now())+" Beginning retrieval protocol...\r")
 		keyword_query()
@@ -248,7 +243,7 @@ T = 0
 while T == 0:
 	option1 = 0
 	choice = get_command()
-	task(choice, option1)
+	task(choice)
 	continue
 log_file.write(str(datetime.datetime.now())+" Successfully reached end of program. Closing log.\r")
 log_file.close()
