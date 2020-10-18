@@ -29,7 +29,7 @@
 #Need to figure out how to ensure escape characters are handled properly.
 #The storage process should also verify that the given keyword has not already been used.
 
-tannin_version = "0.2.2 \"Two Invitations\""
+tannin_version = "0.2.3 \"I Just Wanted to Make You Something Beautiful\""
 
 import pyperclip
 import os
@@ -41,6 +41,8 @@ def greeting():
 
 def file_check():
 	global file_status
+	global keyword_index
+	keyword_index = []
 	log_file.write(str(datetime.datetime.now())+" Checking files...\r")
 	water_check = bool(os.path.exists("water.txt"))
 	earl_check = bool(os.path.exists("earl.txt"))
@@ -48,6 +50,12 @@ def file_check():
 	if water_check and earl_check and grey_check:
 		log_file.write(str(datetime.datetime.now())+" All files found.\r")
 		file_status = "ok"
+		log_file.write(str(datetime.datetime.now())+" Indexing stored keywords...\r")
+		f = open("water.txt", "r")
+		for x in f:
+			keyword_index.append(x.rstrip('\n'))
+		log_file.write(str(datetime.datetime.now())+" Indexing complete.\r")
+		f.close()
 	elif not water_check and not earl_check and not grey_check:
 		log_file.write(str(datetime.datetime.now())+" No files found. New directories will be created.\r")
 		file_status = "bad"
@@ -61,7 +69,7 @@ def get_command():
 	x = 0
 	while x == 0:
 		global option1
-		command = str(input("\nEnter command: "))
+		command = input("\nEnter command: ")
 		if command == "s" or command == "store":
 			return "store"
 		elif command == "s -p" or command == "store -p":
@@ -84,34 +92,38 @@ def get_command():
 			return "copy"
 		else:
 			print("\""+command+"\" bad input. Try again.")
-			log_file.write(str(datetime.datetime.now())+" User attempted invalid input. Trying again...\r")
+			log_file.write(str(datetime.datetime.now())+" User attempted invalid command. Trying again...\r")
 			continue
 
 def store():
 	keyword_to_store = str(input("Enter a keyword: "))
-	if option1 == "p":
-		log_file.write(str(datetime.datetime.now())+" Attempting to pull hash from clipboard...\r")
-		print("Getting hash from clipboard...")
-		hash_to_store = pyperclip.paste()
+	if keyword_to_store in keyword_index:
+		log_file.write(str(datetime.datetime.now())+" User attempted storing with keyword already in use.\r")
+		print("Keyword is already being used in this database. Choose another.")
 	else:
-		hash_to_store = str(input("Enter a hash to be stored: "))
-	if len(hash_to_store) != 200:
-		print("Entered length is "+str(len(hash_to_store))+". hash must equal 200 characters.\r")
-		log_file.write(str(datetime.datetime.now())+" User entered hash not length 200.\r")
-	else:
-		log_file.write(str(datetime.datetime.now())+" Successful keyword and hash input. Storing keyword...\r")
-		f_water = open("water.txt", "a")
-		f_water.write(keyword_to_store+"\r")
-		f_water.close()
-		log_file.write(str(datetime.datetime.now())+" Storing hash...\r")
-		f_earl = open("earl.txt", "a")
-		f_earl.write(hash_to_store[0:100]+"\r")
-		f_earl.close()
-		f_grey = open("grey.txt", "a")
-		f_grey.write(hash_to_store[100:200]+"\r")
-		f_grey.close()
-		log_file.write(str(datetime.datetime.now())+" File writing complete!\r")
-		print("File writing complete!")
+		if option1 == "p":
+			log_file.write(str(datetime.datetime.now())+" Attempting to pull hash from clipboard...\r")
+			print("Getting hash from clipboard...")
+			hash_to_store = pyperclip.paste()
+		else:
+			hash_to_store = input("Enter a hash to be stored: ")
+			log_file.write(str(datetime.datetime.now())+" Successful hash input.\r")
+		if len(hash_to_store) != 200:
+			print("Entered length is "+str(len(hash_to_store))+". hash must equal 200 characters.\r")
+		else:
+			log_file.write(str(datetime.datetime.now())+" Successful keyword and hash input. Storing keyword...\r")
+			f_water = open("water.txt", "a")
+			f_water.write(keyword_to_store+"\r")
+			f_water.close()
+			log_file.write(str(datetime.datetime.now())+" Storing hash...\r")
+			f_earl = open("earl.txt", "a")
+			f_earl.write(hash_to_store[0:100]+"\r")
+			f_earl.close()
+			f_grey = open("grey.txt", "a")
+			f_grey.write(hash_to_store[100:200]+"\r")
+			f_grey.close()
+			log_file.write(str(datetime.datetime.now())+" File writing complete!\r")
+			print("File writing complete!")
 
 def keyword_query():
 	if file_status == "ok":
