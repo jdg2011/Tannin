@@ -49,7 +49,7 @@ def file_check():
 		log_file.write(str(datetime.datetime.now())+" All files found.\r")
 		file_status = "ok"
 	elif not water_check and not earl_check and not grey_check:
-		log_file.write(str(datetime.datetime.now())+" No files found. New directories will be created.\r")
+		log_file.write(str(datetime.datetime.now())+" No files found.\r")
 		file_status = "bad"
 	else:
 		log_file.write(str(datetime.datetime.now())+" Some but not all files found. Unstable status.\r")
@@ -58,13 +58,13 @@ def file_check():
 
 def index_keywords():
 	log_file.write(str(datetime.datetime.now())+" Indexing stored keywords...\r")
-	global keyword_index
 	keyword_index = []
 	f = open("water.txt", "r")
 	for x in f:
 		keyword_index.append(x.rstrip('\n'))
-	log_file.write(str(datetime.datetime.now())+" Indexing complete.\r")
 	f.close()
+	log_file.write(str(datetime.datetime.now())+" Indexing complete.\r")
+
 
 def get_command():
 	x = 0
@@ -80,6 +80,9 @@ def get_command():
 			return "retrieve"
 		elif command == "r -c" or command == "retrieve -c":
 			option1 = "c"
+			return "retrieve"
+		elif command == "r -d" or command == "retrieve -d":
+			option1 = "d"
 			return "retrieve"
 		elif command == "h" or command == "help":
 			return "help"
@@ -123,8 +126,8 @@ def store():
 			f_grey = open("grey.txt", "a")
 			f_grey.write(hash_to_store[100:200]+"\r")
 			f_grey.close()
-			log_file.write(str(datetime.datetime.now())+" File writing complete!\r")
-			print("File writing complete!")
+			log_file.write(str(datetime.datetime.now())+" Hash storage complete.\r")
+			print("Hash storage complete.")
 			index_keywords()
 
 def keyword_query():
@@ -148,11 +151,13 @@ def line_finder(keyword_to_find):
 	for num, line in enumerate(f_water,1):
 					if keyword_to_find in line:
 						f_water.close()
-						log_file.write(str(datetime.datetime.now())+" Found line number < "+str(num)+" >. Beginning retrieval...\r")
-						retrieval(num)
+						log_file.write(str(datetime.datetime.now())+" Found line number < "+str(num)+" >.\r")
+						if option1 == "d": delete_hash(num-1)
+						else: retrieval(num)
 						break
 
 def retrieval(key):
+	log_file.write(str(datetime.datetime.now())+" Beginning hash delivery protocol...\r")
 	f_earl = open("earl.txt", "r")
 	f_grey = open("grey.txt", "r")
 	z = 0
@@ -161,16 +166,53 @@ def retrieval(key):
 		if z == key:
 			global found_hash
 			found_hash = f_earl.readline().rstrip('\n')+f_grey.readline().rstrip('\n')
-			print("Hash found:\n\n--------------------------\n"+found_hash+"\n--------------------------")
-			log_file.write(str(datetime.datetime.now())+" Hash successfully delivered.\r")
 			f_earl.close()
 			f_grey.close()
+			print("Hash found:\n\n--------------------------\n"+found_hash+"\n--------------------------")
+			log_file.write(str(datetime.datetime.now())+" Hash successfully delivered.\r")
 		else:
 			log_file.write(str(datetime.datetime.now())+" Cycling through hash files...\r")
 			f_earl.readline()
 			f_grey.readline()
 			continue
 	if option1 == "c": copy_hash()
+
+def delete_hash(num):
+	log_file.write(str(datetime.datetime.now())+" Beginning delete has protocol...\r")
+	f_earl = open("earl.txt", "r")
+	earl_lines = f_earl.readlines()
+	f_earl.close()
+	f_earl = open("earl.txt", "w")
+	z = 0
+	for x in earl_lines:
+		if z != num:
+			f_earl.write(x)
+		z += 1
+	f_earl.close()
+	f_grey = open("grey.txt", "r")
+	grey_lines = f_grey.readlines()
+	f_grey.close()
+	f_grey = open("grey.txt", "w")
+	z = 0
+	for x in grey_lines:
+		if z != num:
+			f_grey.write(x)
+		z += 1
+	f_grey.close()
+	f_water = open("water.txt", "r")
+	water_lines = f_water.readlines()
+	f_water.close()
+	f_water = open("water.txt", "w")
+	z = 0
+	for x in water_lines:
+		if z != num:
+			f_water.write(x)
+		z += 1
+	f_water.close()
+	index_keywords()
+	print("Entry deleted.")
+	log_file.write(str(datetime.datetime.now())+" Hash and keyword successfully deleted.\r")
+
 
 def copy_hash():
 	if found_hash != 0:
@@ -222,6 +264,7 @@ def wipe_files():
 	else:
 		log_file.write(str(datetime.datetime.now())+" Second hash file not found.\r")
 		print("Second hash file does not exist.")
+	file_check()
 	print("File wiping complete.")
 	log_file.write(str(datetime.datetime.now())+" File wiping complete.\r")
 
@@ -252,6 +295,7 @@ greeting()
 log_file = open("log.txt", "w")
 log_file.write("Log file created "+str(datetime.datetime.now())+" running version "+tannin_version+"\r")
 file_check()
+keyword_index = []
 if file_status == "ok": index_keywords()
 found_hash = 0
 T = 0
