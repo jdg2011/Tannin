@@ -7,8 +7,7 @@ Commands for Tannin:
 | [r]etrieve | retrieve a hash by entering a keyword
 |		<use option "-c" to automatically paste the hash to
 |		the clipboard after entering the keyword>
-|		<use option "-d" to delete the hash and its keyword
-|		(not yet implemented)>
+|		<use option "-d" to delete the hash and its keyword>
 | [l]ist     | list all saved keywords
 | [c]opy     | copy a the last found hash to the clipboard
 | [w]ipe     | wipe entire database
