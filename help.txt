@@ -14,8 +14,8 @@ Commands for Tannin:
 | [h]elp     | <help message print out>
 | [e]xit     | <exit Tannin>
 
-Keywords must be unique from each other, and they must not contain
-spaces, back-slashes, or pound symbols.
+Keywords must be unique from each other. Do not attempt storing a
+keyword with a space, as Tannin will be unable to find it in any query
 
 Tannin is designed to be used in tandem with Tea.lock, so hashes are
 only accepted if they are exactly 200 characters long.
