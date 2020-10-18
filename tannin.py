@@ -29,7 +29,7 @@
 #Need to figure out how to ensure escape characters are handled properly.
 #The storage process should also verify that the given keyword has not already been used.
 
-tannin_version = "0.2.3 \"I Just Wanted to Make You Something Beautiful\""
+tannin_version = "0.3.0 \"My Ol` Radio\""
 
 import pyperclip
 import os
@@ -65,40 +65,6 @@ def index_keywords():
 	f.close()
 	log_file.write(str(datetime.datetime.now())+" Indexing complete.\r")
 
-
-def get_command():
-	x = 0
-	while x == 0:
-		global option1
-		command = input("\nEnter command: ")
-		if command == "s" or command == "store":
-			return "store"
-		elif command == "s -p" or command == "store -p":
-			option1 = "p"
-			return "store"
-		elif command == "r" or command == "retrieve":
-			return "retrieve"
-		elif command == "r -c" or command == "retrieve -c":
-			option1 = "c"
-			return "retrieve"
-		elif command == "r -d" or command == "retrieve -d":
-			option1 = "d"
-			return "retrieve"
-		elif command == "h" or command == "help":
-			return "help"
-		elif command == "q" or command == "quit":
-			return "quit"
-		elif command == "w" or command == "wipe":
-			return "wipe"
-		elif command == "l" or command == "list":
-			return "list"
-		elif command == "c" or command == "copy":
-			return "copy"
-		else:
-			print("\""+command+"\" bad input. Try again.")
-			log_file.write(str(datetime.datetime.now())+" User attempted invalid command. Trying again...\r")
-			continue
-
 def store():
 	keyword_to_store = str(input("Enter a keyword: "))
 	if keyword_to_store in keyword_index:
@@ -128,9 +94,10 @@ def store():
 			f_grey.close()
 			log_file.write(str(datetime.datetime.now())+" Hash storage complete.\r")
 			print("Hash storage complete.")
+			file_check()
 			index_keywords()
 
-def keyword_query():
+def keyword_search():
 	if file_status == "ok":
 		keyword_to_find = str(input("Enter a keyword: "))
 		f_water = open("water.txt", "r")
@@ -144,7 +111,7 @@ def keyword_query():
 			f_water.close()
 	else:
 		log_file.write(str(datetime.datetime.now())+" One or more files are missing; hash retrieval not possible.\r")
-		print("Files <water.txt> <earl.txt> and <grey.txt> must be present and non-empty to initiate retrieval.\nEnsure all files are in Tannin directory or store a new hash with command <s>.\n")
+		print("Files <water.txt> <earl.txt> and <grey.txt> must be present and non-empty to initiate query.\nEnsure all files are in Tannin directory or store a new hash with command <s>.\n")
 
 def line_finder(keyword_to_find):
 	f_water = open("water.txt", "r")
@@ -153,10 +120,10 @@ def line_finder(keyword_to_find):
 						f_water.close()
 						log_file.write(str(datetime.datetime.now())+" Found line number < "+str(num)+" >.\r")
 						if option1 == "d": delete_hash(num-1)
-						else: retrieval(num)
+						else: hash_delivery(num)
 						break
 
-def retrieval(key):
+def hash_delivery(key):
 	log_file.write(str(datetime.datetime.now())+" Beginning hash delivery protocol...\r")
 	f_earl = open("earl.txt", "r")
 	f_grey = open("grey.txt", "r")
@@ -213,7 +180,6 @@ def delete_hash(num):
 	print("Entry deleted.")
 	log_file.write(str(datetime.datetime.now())+" Hash and keyword successfully deleted.\r")
 
-
 def copy_hash():
 	if found_hash != 0:
 		log_file.write(str(datetime.datetime.now())+" Copying found hash to clipboard...\r")
@@ -268,13 +234,46 @@ def wipe_files():
 	print("File wiping complete.")
 	log_file.write(str(datetime.datetime.now())+" File wiping complete.\r")
 
+def get_command():
+	x = 0
+	while x == 0:
+		global option1
+		command = input("\nEnter command: ")
+		if command == "s" or command == "store":
+			return "store"
+		elif command == "s -p" or command == "store -p":
+			option1 = "p"
+			return "store"
+		elif command == "q" or command == "query":
+			return "query"
+		elif command == "q -c" or command == "query -c":
+			option1 = "c"
+			return "query"
+		elif command == "q -d" or command == "query -d":
+			option1 = "d"
+			return "query"
+		elif command == "h" or command == "help":
+			return "help"
+		elif command == "e" or command == "exit":
+			return "exit"
+		elif command == "w" or command == "wipe":
+			return "wipe"
+		elif command == "l" or command == "list":
+			return "list"
+		elif command == "c" or command == "copy":
+			return "copy"
+		else:
+			print("\""+command+"\" bad input. Try again.")
+			log_file.write(str(datetime.datetime.now())+" User attempted invalid command. Trying again...\r")
+			continue
+
 def task(selected_task):
 	if selected_task == "store":
 		log_file.write(str(datetime.datetime.now())+" Beginning storage protocol...\r")
 		store()
-	elif selected_task == "retrieve":
-		log_file.write(str(datetime.datetime.now())+" Beginning retrieval protocol...\r")
-		keyword_query()
+	elif selected_task == "query":
+		log_file.write(str(datetime.datetime.now())+" Beginning query protocol...\r")
+		keyword_search()
 	elif selected_task == "help":
 		print_help()
 	elif selected_task == "wipe":
@@ -286,8 +285,8 @@ def task(selected_task):
 	elif selected_task == "copy":
 		log_file.write(str(datetime.datetime.now())+" Beginning copy protocol...\r")
 		copy_hash()
-	elif selected_task == "quit":
-		log_file.write(str(datetime.datetime.now())+" Quitting...\r")
+	elif selected_task == "exit":
+		log_file.write(str(datetime.datetime.now())+" Exiting...\r")
 		global T
 		T = 1
 
