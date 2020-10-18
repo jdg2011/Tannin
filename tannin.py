@@ -41,8 +41,6 @@ def greeting():
 
 def file_check():
 	global file_status
-	global keyword_index
-	keyword_index = []
 	log_file.write(str(datetime.datetime.now())+" Checking files...\r")
 	water_check = bool(os.path.exists("water.txt"))
 	earl_check = bool(os.path.exists("earl.txt"))
@@ -50,12 +48,6 @@ def file_check():
 	if water_check and earl_check and grey_check:
 		log_file.write(str(datetime.datetime.now())+" All files found.\r")
 		file_status = "ok"
-		log_file.write(str(datetime.datetime.now())+" Indexing stored keywords...\r")
-		f = open("water.txt", "r")
-		for x in f:
-			keyword_index.append(x.rstrip('\n'))
-		log_file.write(str(datetime.datetime.now())+" Indexing complete.\r")
-		f.close()
 	elif not water_check and not earl_check and not grey_check:
 		log_file.write(str(datetime.datetime.now())+" No files found. New directories will be created.\r")
 		file_status = "bad"
@@ -64,6 +56,15 @@ def file_check():
 		print("WARNING: A partial directory was found. Quit and ensure all files are restored before proceeding, or enter command <w> to wipe all present files.\n\n")
 		file_status = "bad"
 
+def index_keywords():
+	log_file.write(str(datetime.datetime.now())+" Indexing stored keywords...\r")
+	global keyword_index
+	keyword_index = []
+	f = open("water.txt", "r")
+	for x in f:
+		keyword_index.append(x.rstrip('\n'))
+	log_file.write(str(datetime.datetime.now())+" Indexing complete.\r")
+	f.close()
 
 def get_command():
 	x = 0
@@ -124,6 +125,7 @@ def store():
 			f_grey.close()
 			log_file.write(str(datetime.datetime.now())+" File writing complete!\r")
 			print("File writing complete!")
+			index_keywords()
 
 def keyword_query():
 	if file_status == "ok":
@@ -168,8 +170,7 @@ def retrieval(key):
 			f_earl.readline()
 			f_grey.readline()
 			continue
-	if option1 == "c":
-		copy_hash()
+	if option1 == "c": copy_hash()
 
 def copy_hash():
 	if found_hash != 0:
@@ -250,10 +251,11 @@ def task(selected_task):
 greeting()
 log_file = open("log.txt", "w")
 log_file.write("Log file created "+str(datetime.datetime.now())+" running version "+tannin_version+"\r")
+file_check()
+if file_status == "ok": index_keywords()
 found_hash = 0
 T = 0
 while T == 0:
-	file_check()
 	option1 = 0
 	choice = get_command()
 	task(choice)
