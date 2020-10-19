@@ -146,7 +146,7 @@ def hash_delivery(key):
 			found_hash = f_earl.readline().rstrip('\n')+f_grey.readline().rstrip('\n')
 			f_earl.close()
 			f_grey.close()
-			print("Hash found:\n\n--------------------------\n"+found_hash+"\n--------------------------")
+			print("Hash found:\n--------------------------\n"+found_hash+"\n--------------------------")
 			log_file.write(str(datetime.datetime.now())+" Hash successfully delivered.\r")
 		else:
 			log_file.write(str(datetime.datetime.now())+" Cycling through hash files...\r")
@@ -198,7 +198,7 @@ def copy_hash():
 		print("Hash copied to clipboard.")
 	else:
 		log_file.write(str(datetime.datetime.now())+" User attempted copying hash when no hash found.\r")
-		print("Find a hash first with command <r>")
+		print("Find a hash first with command <q>")
 
 def print_help():
 	if os.path.exists("help.txt"):
