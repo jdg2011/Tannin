@@ -70,7 +70,10 @@ def index_keywords():
 def store():
 	if file_status == "ok" or file_status == "none":
 		keyword_to_store = str(input("Enter a keyword: "))
-		if keyword_to_store in keyword_index:
+		if " " in keyword_to_store:
+			log_file.write(str(datetime.datetime.now())+" User attempted storing with keyword with a space.\r")
+			print("You cannot store keywords with spaces. Try _ or -.")
+		elif keyword_to_store in keyword_index:
 			log_file.write(str(datetime.datetime.now())+" User attempted storing with keyword already in use.\r")
 			print("Keyword \""+keyword_to_store+"\" is already in use. Choose another.")
 		else:
@@ -119,7 +122,7 @@ def keyword_search():
 		print("Files <water.txt> <earl.txt> and <grey.txt> must be present and non-empty to initiate query.\nEnsure all files are in Tannin directory or wipe database with <w>.\n")
 	else:
 		log_file.write(str(datetime.datetime.now())+" User attempted query with no hashes stored.\r")
-		print("No hashes stored yet.\nStart storing hashes with command <s>.\n")
+		print("No hashes stored yet.\nStart storing hashes with command <s>.")
 
 def line_finder(keyword_to_find):
 	f_water = open("water.txt", "r")
@@ -217,7 +220,7 @@ def list_keys():
 		log_file.write(str(datetime.datetime.now())+" Keyword file printed.\r")
 	else:
 		log_file.write(str(datetime.datetime.now())+" User attempted listing keywords but no keyword file found.\r")
-		print("No keyword file found.\n")
+		print("No keyword file found.")
 
 def wipe_files():
 	if os.path.exists("water.txt"):
