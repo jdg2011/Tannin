@@ -26,9 +26,6 @@
 #SOFTWARE.
 #-------------------------------------------------------------------------------
 
-#Need to figure out how to ensure escape characters are handled properly.
-#The storage process should also verify that the given keyword has not already been used.
-
 tannin_version = "0.3.1 \"Idaho\""
 
 import pyperclip
