@@ -29,7 +29,7 @@
 #Need to figure out how to ensure escape characters are handled properly.
 #The storage process should also verify that the given keyword has not already been used.
 
-tannin_version = "0.3.0 \"My Ol` Radio\""
+tannin_version = "0.3.1 \"Idaho\""
 
 import pyperclip
 import os
@@ -50,7 +50,7 @@ def file_check():
 		file_status = "ok"
 	elif not water_check and not earl_check and not grey_check:
 		log_file.write(str(datetime.datetime.now())+" No files found.\r")
-		file_status = "bad"
+		file_status = "none"
 	else:
 		log_file.write(str(datetime.datetime.now())+" Some but not all files found. Unstable status.\r")
 		print("WARNING: A partial directory was found. Quit and ensure all files are restored before proceeding, or enter command <w> to wipe all present files.\n\n")
@@ -58,10 +58,10 @@ def file_check():
 	index_keywords()
 
 def index_keywords():
-	log_file.write(str(datetime.datetime.now())+" Indexing stored keywords...\r")
 	global keyword_index
 	keyword_index = []
 	if file_status == "ok":
+		log_file.write(str(datetime.datetime.now())+" Indexing stored keywords...\r")
 		f = open("water.txt", "r")
 		for x in f:
 			keyword_index.append(x.rstrip('\n'))
@@ -71,36 +71,39 @@ def index_keywords():
 		log_file.write(str(datetime.datetime.now())+" No keywords to index.\r")
 
 def store():
-	keyword_to_store = str(input("Enter a keyword: "))
-	if keyword_to_store in keyword_index:
-		log_file.write(str(datetime.datetime.now())+" User attempted storing with keyword already in use.\r")
-		print("Keyword \""+keyword_to_store+"\" is already in use. Choose another.")
-	else:
-		if option1 == "p":
-			log_file.write(str(datetime.datetime.now())+" Getting hash from clipboard...\r")
-			print("Getting hash from clipboard...")
-			hash_to_store = pyperclip.paste()
+	if file_status == "ok" or file_status == "none":
+		keyword_to_store = str(input("Enter a keyword: "))
+		if keyword_to_store in keyword_index:
+			log_file.write(str(datetime.datetime.now())+" User attempted storing with keyword already in use.\r")
+			print("Keyword \""+keyword_to_store+"\" is already in use. Choose another.")
 		else:
-			hash_to_store = input("Enter a hash to be stored: ")
-			log_file.write(str(datetime.datetime.now())+" Successful hash input.\r")
-		if len(hash_to_store) != 200:
-			print("Entered length is "+str(len(hash_to_store))+". Hash length must equal 200 characters.\r")
-		else:
-			log_file.write(str(datetime.datetime.now())+" Successful keyword and hash input. Storing keyword...\r")
-			f_water = open("water.txt", "a")
-			f_water.write(keyword_to_store+"\r")
-			f_water.close()
-			log_file.write(str(datetime.datetime.now())+" Storing hash...\r")
-			f_earl = open("earl.txt", "a")
-			f_earl.write(hash_to_store[0:100]+"\r")
-			f_earl.close()
-			f_grey = open("grey.txt", "a")
-			f_grey.write(hash_to_store[100:200]+"\r")
-			f_grey.close()
-			log_file.write(str(datetime.datetime.now())+" Hash storage complete.\r")
-			print("Hash storage complete.")
-			file_check()
-			index_keywords()
+			if option1 == "p":
+				log_file.write(str(datetime.datetime.now())+" Getting hash from clipboard...\r")
+				print("Getting hash from clipboard...")
+				hash_to_store = pyperclip.paste()
+			else:
+				hash_to_store = input("Enter a hash to be stored: ")
+				log_file.write(str(datetime.datetime.now())+" Successful hash input.\r")
+			if len(hash_to_store) != 200:
+				print("Entered length is "+str(len(hash_to_store))+". Hash length must equal 200 characters.\r")
+			else:
+				log_file.write(str(datetime.datetime.now())+" Successful keyword and hash input. Storing keyword...\r")
+				f_water = open("water.txt", "a")
+				f_water.write(keyword_to_store+"\r")
+				f_water.close()
+				log_file.write(str(datetime.datetime.now())+" Storing hash...\r")
+				f_earl = open("earl.txt", "a")
+				f_earl.write(hash_to_store[0:100]+"\r")
+				f_earl.close()
+				f_grey = open("grey.txt", "a")
+				f_grey.write(hash_to_store[100:200]+"\r")
+				f_grey.close()
+				log_file.write(str(datetime.datetime.now())+" Hash storage complete.\r")
+				print("Hash storage complete.")
+				file_check()
+	elif file_status == "bad":
+		log_file.write(str(datetime.datetime.now())+" One or two files are missing; hash storage not possible.\r")
+		print("Files <water.txt> <earl.txt> and <grey.txt> must be present and non-empty to initiate storage.\nEnsure all files are in Tannin directory or wipe database with <w>.\n")
 
 def keyword_search():
 	if file_status == "ok":
@@ -114,9 +117,12 @@ def keyword_search():
 			log_file.write(str(datetime.datetime.now())+" User attempted bad keyword query.\r")
 			print("Keyword \""+keyword_to_find+"\" not found.")
 			f_water.close()
+	elif file_status == "bad":
+		log_file.write(str(datetime.datetime.now())+" One or two files are missing; hash retrieval not possible.\r")
+		print("Files <water.txt> <earl.txt> and <grey.txt> must be present and non-empty to initiate query.\nEnsure all files are in Tannin directory or wipe database with <w>.\n")
 	else:
-		log_file.write(str(datetime.datetime.now())+" One or more files are missing; hash retrieval not possible.\r")
-		print("Files <water.txt> <earl.txt> and <grey.txt> must be present and non-empty to initiate query.\nEnsure all files are in Tannin directory or store a new hash with command <s>.\n")
+		log_file.write(str(datetime.datetime.now())+" User attempted query with no hashes stored.\r")
+		print("No hashes stored yet.\nStart storing hashes with command <s>.\n")
 
 def line_finder(keyword_to_find):
 	f_water = open("water.txt", "r")
