@@ -55,31 +55,36 @@ def file_check():
 		log_file.write(str(datetime.datetime.now())+" Some but not all files found. Unstable status.\r")
 		print("WARNING: A partial directory was found. Quit and ensure all files are restored before proceeding, or enter command <w> to wipe all present files.\n\n")
 		file_status = "bad"
+	index_keywords()
 
 def index_keywords():
 	log_file.write(str(datetime.datetime.now())+" Indexing stored keywords...\r")
+	global keyword_index
 	keyword_index = []
-	f = open("water.txt", "r")
-	for x in f:
-		keyword_index.append(x.rstrip('\n'))
-	f.close()
-	log_file.write(str(datetime.datetime.now())+" Indexing complete.\r")
+	if file_status == "ok":
+		f = open("water.txt", "r")
+		for x in f:
+			keyword_index.append(x.rstrip('\n'))
+		f.close()
+		log_file.write(str(datetime.datetime.now())+" Indexing complete.\r")
+	else:
+		log_file.write(str(datetime.datetime.now())+" No keywords to index.\r")
 
 def store():
 	keyword_to_store = str(input("Enter a keyword: "))
 	if keyword_to_store in keyword_index:
 		log_file.write(str(datetime.datetime.now())+" User attempted storing with keyword already in use.\r")
-		print("Keyword is already being used in this database. Choose another.")
+		print("Keyword \""+keyword_to_store+"\" is already in use. Choose another.")
 	else:
 		if option1 == "p":
-			log_file.write(str(datetime.datetime.now())+" Attempting to pull hash from clipboard...\r")
+			log_file.write(str(datetime.datetime.now())+" Getting hash from clipboard...\r")
 			print("Getting hash from clipboard...")
 			hash_to_store = pyperclip.paste()
 		else:
 			hash_to_store = input("Enter a hash to be stored: ")
 			log_file.write(str(datetime.datetime.now())+" Successful hash input.\r")
 		if len(hash_to_store) != 200:
-			print("Entered length is "+str(len(hash_to_store))+". hash must equal 200 characters.\r")
+			print("Entered length is "+str(len(hash_to_store))+". Hash length must equal 200 characters.\r")
 		else:
 			log_file.write(str(datetime.datetime.now())+" Successful keyword and hash input. Storing keyword...\r")
 			f_water = open("water.txt", "a")
@@ -294,8 +299,6 @@ greeting()
 log_file = open("log.txt", "w")
 log_file.write("Log file created "+str(datetime.datetime.now())+" running version "+tannin_version+"\r")
 file_check()
-keyword_index = []
-if file_status == "ok": index_keywords()
 found_hash = 0
 T = 0
 while T == 0:
