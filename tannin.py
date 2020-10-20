@@ -26,7 +26,7 @@
 #SOFTWARE.
 #-------------------------------------------------------------------------------
 
-tannin_version = "0.3.1 \"Idaho\""
+tannin_version = "3.0.0 \"Articulate Silences, Pt. 2\""
 
 import pyperclip
 import os
