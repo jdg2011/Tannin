@@ -26,7 +26,7 @@
 #SOFTWARE.
 #-------------------------------------------------------------------------------
 
-tannin_version = "3.0.0 \"Articulate Silences, Pt. 2\""
+tannin_version = "3.1.0 \"The Shade\""
 
 import pyperclip
 import os
@@ -69,7 +69,10 @@ def index_keywords():
 
 def store():
 	if file_status == "ok" or file_status == "none":
-		keyword_to_store = str(input("Enter a keyword: "))
+		if option2 == 0:
+			keyword_to_store = input("Enter a keyword: ")
+		else:
+			keyword_to_store = option2
 		if " " in keyword_to_store:
 			log_file.write(str(datetime.datetime.now())+" User attempted storing with keyword with a space.\r")
 			print("You cannot store keywords with spaces. Try _ or -.")
@@ -107,7 +110,10 @@ def store():
 
 def keyword_search():
 	if file_status == "ok":
-		keyword_to_find = str(input("Enter a keyword: "))
+		if option2 == 0:
+			keyword_to_find = str(input("Enter a keyword: "))
+		else:
+			keyword_to_find = option2
 		f_water = open("water.txt", "r")
 		if keyword_to_find in f_water.read().split():
 			log_file.write(str(datetime.datetime.now())+" Found keyword. Acquiring line number...\r")
@@ -249,19 +255,66 @@ def get_command():
 	x = 0
 	while x == 0:
 		global option1
-		command = input("\nEnter command: ")
+		global option2
+		command = str(input("\nEnter command: "))
 		if command == "s" or command == "store":
 			return "store"
 		elif command == "s -p" or command == "store -p":
 			option1 = "p"
+			return "store"
+		elif len(command)>5 and command[0:5]=="s -p ":
+			option_end = len(command)
+			option1 = "p"
+			option2 = command[5:option_end]
+			return "store"
+		elif len(command)>9 and command[0:9]=="store -p ":
+			option_end = len(command)
+			option1 = "p"
+			option2 = command[9:option_end]
+			return "store"
+		elif len(command)>2 and command[0:2]=="s ":
+			option_end = len(command)
+			option2 = command[2:option_end]
+			return "store"
+		elif len(command)>6 and command[0:6]=="store ":
+			option_end = len(command)
+			option2 = command[6:option_end]
 			return "store"
 		elif command == "q" or command == "query":
 			return "query"
 		elif command == "q -c" or command == "query -c":
 			option1 = "c"
 			return "query"
+		elif len(command)>5 and command[0:5]=="q -c ":
+			option_end = len(command)
+			option1 = "c"
+			option2 = command[5:option_end]
+			return "query"
+		elif len(command)>9 and command[0:9]=="query -c ":
+			option_end = len(command)
+			option1 = "c"
+			option2 = command[9:option_end]
+			return "query"
 		elif command == "q -d" or command == "query -d":
 			option1 = "d"
+			return "query"
+		elif len(command)>5 and command[0:5]=="q -d ":
+			option_end = len(command)
+			option1 = "d"
+			option2 = command[5:option_end]
+			return "query"
+		elif len(command)>9 and command[0:9]=="query -d ":
+			option_end = len(command)
+			option1 = "d"
+			option2 = command[9:option_end]
+			return "query"
+		elif len(command)>2 and command[0:2]=="q ":
+			option_end = len(command)
+			option2 = command[2:option_end]
+			return "query"
+		elif len(command)>6 and command[0:6]=="query ":
+			option_end = len(command)
+			option2 = command[6:option_end]
 			return "query"
 		elif command == "h" or command == "help":
 			return "help"
@@ -309,6 +362,7 @@ found_hash = 0
 T = 0
 while T == 0:
 	option1 = 0
+	option2 = 0
 	choice = get_command()
 	task(choice)
 	continue
