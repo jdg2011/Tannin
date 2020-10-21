@@ -26,7 +26,7 @@
 #SOFTWARE.
 #-------------------------------------------------------------------------------
 
-tannin_version = "1.1.0 \"The Shade\""
+tannin_version = "1.1.1 \"Montana\""
 
 import pyperclip
 import os
@@ -162,40 +162,44 @@ def hash_delivery(key):
 	if option1 == "c": copy_hash()
 
 def delete_hash(num):
-	log_file.write(str(datetime.datetime.now())+" Beginning delete has protocol...\r")
-	f_earl = open("earl.txt", "r")
-	earl_lines = f_earl.readlines()
-	f_earl.close()
-	f_earl = open("earl.txt", "w")
-	z = 0
-	for x in earl_lines:
-		if z != num:
-			f_earl.write(x)
-		z += 1
-	f_earl.close()
-	f_grey = open("grey.txt", "r")
-	grey_lines = f_grey.readlines()
-	f_grey.close()
-	f_grey = open("grey.txt", "w")
-	z = 0
-	for x in grey_lines:
-		if z != num:
-			f_grey.write(x)
-		z += 1
-	f_grey.close()
-	f_water = open("water.txt", "r")
-	water_lines = f_water.readlines()
-	f_water.close()
-	f_water = open("water.txt", "w")
-	z = 0
-	for x in water_lines:
-		if z != num:
-			f_water.write(x)
-		z += 1
-	f_water.close()
-	index_keywords()
-	print("Entry deleted.")
-	log_file.write(str(datetime.datetime.now())+" Hash and keyword successfully deleted.\r")
+	answer = confirm_command()
+	if answer == "y":
+		log_file.write(str(datetime.datetime.now())+" Beginning delete has protocol...\r")
+		f_earl = open("earl.txt", "r")
+		earl_lines = f_earl.readlines()
+		f_earl.close()
+		f_earl = open("earl.txt", "w")
+		z = 0
+		for x in earl_lines:
+			if z != num:
+				f_earl.write(x)
+			z += 1
+		f_earl.close()
+		f_grey = open("grey.txt", "r")
+		grey_lines = f_grey.readlines()
+		f_grey.close()
+		f_grey = open("grey.txt", "w")
+		z = 0
+		for x in grey_lines:
+			if z != num:
+				f_grey.write(x)
+			z += 1
+		f_grey.close()
+		f_water = open("water.txt", "r")
+		water_lines = f_water.readlines()
+		f_water.close()
+		f_water = open("water.txt", "w")
+		z = 0
+		for x in water_lines:
+			if z != num:
+				f_water.write(x)
+			z += 1
+		f_water.close()
+		index_keywords()
+		print("Entry deleted.")
+		log_file.write(str(datetime.datetime.now())+" Hash and keyword successfully deleted.\r")
+	else:
+		print("Command canceled.")
 
 def copy_hash():
 	if found_hash != 0:
@@ -229,27 +233,41 @@ def list_keys():
 		print("No keyword file found.")
 
 def wipe_files():
-	if os.path.exists("water.txt"):
-		log_file.write(str(datetime.datetime.now())+" Deleting keyword file...\r")
-		os.remove("water.txt")
+	answer = confirm_command()
+	if answer == "y":
+		if os.path.exists("water.txt"):
+			log_file.write(str(datetime.datetime.now())+" Deleting keyword file...\r")
+			os.remove("water.txt")
+		else:
+			log_file.write(str(datetime.datetime.now())+" Keyword file not found.\r")
+			print("Keyword file does not exist.")
+		if os.path.exists("earl.txt"):
+			log_file.write(str(datetime.datetime.now())+" Deleting first hash file...\r")
+			os.remove("earl.txt")
+		else:
+			log_file.write(str(datetime.datetime.now())+" First hash file not found.\r")
+			print("First hash file does not exist.")
+		if os.path.exists("grey.txt"):
+			log_file.write(str(datetime.datetime.now())+" Deleting second hash file...\r")
+			os.remove("grey.txt")
+		else:
+			log_file.write(str(datetime.datetime.now())+" Second hash file not found.\r")
+			print("Second hash file does not exist.")
+		file_check()
+		print("File wiping complete.")
+		log_file.write(str(datetime.datetime.now())+" File wiping complete.\r")
 	else:
-		log_file.write(str(datetime.datetime.now())+" Keyword file not found.\r")
-		print("Keyword file does not exist.")
-	if os.path.exists("earl.txt"):
-		log_file.write(str(datetime.datetime.now())+" Deleting first hash file...\r")
-		os.remove("earl.txt")
-	else:
-		log_file.write(str(datetime.datetime.now())+" First hash file not found.\r")
-		print("First hash file does not exist.")
-	if os.path.exists("grey.txt"):
-		log_file.write(str(datetime.datetime.now())+" Deleting second hash file...\r")
-		os.remove("grey.txt")
-	else:
-		log_file.write(str(datetime.datetime.now())+" Second hash file not found.\r")
-		print("Second hash file does not exist.")
-	file_check()
-	print("File wiping complete.")
-	log_file.write(str(datetime.datetime.now())+" File wiping complete.\r")
+		print("Command canceled.")
+
+def confirm_command():
+	log_file.write(str(datetime.datetime.now())+" Requesting command confirmation from user...\r")
+	z = 0
+	while z == 0:
+		answer = input("Are you sure? [y/n]: ")
+		if answer!="y" and answer!="n":
+			print("Bad input. Try again.")
+			continue
+		return(answer)
 
 def get_command():
 	x = 0
