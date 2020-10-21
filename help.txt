@@ -1,22 +1,24 @@
 
 --------------------
 Commands for Tannin:
-| [s]tore    | <store a hash with a keyword> 
-|		<use option "-p" to automatically paste a hash
-|		from the clipboard after entering the keyword>
-| [q]uery    | <query a keyword and get its associated hash>
-|		<use option "-c" to automatically paste the hash to
-|		 the clipboard after entering the keyword>
-|		<use option "-d" to delete the hash and its keyword>
-| [l]ist     | <list all saved keywords>
-| [c]opy     | <copy the last found hash to the clipboard>
-| [w]ipe     | <wipe entire database>
-| [h]elp     | <help message print out>
-| [e]xit     | <exit Tannin>
+[s]tore | store a hash with a keyword
+	 add option "-p" to automatically paste a hash
+[q]uery | query a keyword and get its associated hash
+	 add option "-c" to automatically copy the hash
+	 add option "-d" to delete the keyword and hash
+[l]ist  | list all saved keywords
+[c]opy  | copy the last found hash
+[w]ipe  | wipe entire database
+[h]elp  | help message print out
+[e]xit  | exit Tannin
 
-Keywords must be unique from each other. You cannot store keywords with
-spaces.
+You can execute queries and storage in one command by adding your
+keyword to the end of the command, after any options. For example:
+[~$ s -p my_password] will pull a hash from your clipboard and store
+it with the keyword "my_password".
 
-Tannin is designed to be used alongside with Tea.lock, so hashes are
+Keywords must be unique from each other and cannot contain spaces.
+
+Tannin is designed to be used alongside Tea.lock, so hashes are
 only accepted if they are exactly 200 characters long.
 --------------------
