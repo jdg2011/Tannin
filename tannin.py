@@ -26,7 +26,7 @@
 #SOFTWARE.
 #-------------------------------------------------------------------------------
 
-tannin_version = "3.1.0 \"The Shade\""
+tannin_version = "1.1.0 \"The Shade\""
 
 import pyperclip
 import os
